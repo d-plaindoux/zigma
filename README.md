@@ -2,7 +2,7 @@
 
 **Algebraic Abstractions, Formal Invariants, and Zero-Cost Contracts for Zig.**
 
-Zigma is a lightweight, zero-cost framework that brings the power of formal modularity—inspired by OCaml functors, SML signatures, and Rust traits—to systems programming in Zig. By leveraging pure `comptime` reflection, Zigma allows you to define strict **specifications** bundled with mathematical **invariants**, guaranteeing that your implementations are correct by construction with absolutely zero runtime overhead.
+Zigma is a lightweight, zero-cost framework that brings the power of modularity—inspired by OCaml functors, and Rust traits—to systems programming in Zig. By leveraging pure `comptime` reflection, Zigma allows you to define strict **specifications** bundled with mathematical **invariants**, guaranteeing that your implementations are correct by construction with absolutely zero runtime overhead.
 
 ---
 
@@ -20,14 +20,16 @@ Zigma allows you to treat algebraic specifications as first-class citizens. By c
 
 ---
 
-## Quick Start
+## Sketch
+
+> NOTE: Work in progress for the design and the implementation
 
 ### 1. Define the Specification and Invariants
 Declare your interface layout and embed its mathematical laws directly within the struct namespace. Notice we can also use of `callconv(.@"inline")` to enforce performance constraints.
 
 ```zig
 const std = @import("std");
-const Pair = @import("./data/pair.zig").Pair;
+const Pair = ...;
 
 fn Stack(comptime T: fn (type) type, comptime A: type) type {
     return struct {
