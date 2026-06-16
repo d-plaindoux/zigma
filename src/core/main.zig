@@ -2,6 +2,7 @@
 ///
 ///
 const std = @import("std");
+const StructField = std.builtin.Type.StructField;
 
 const Validator = struct {
     const Error = union(enum) {
@@ -12,7 +13,7 @@ const Validator = struct {
         FieldTypeNotConform: struct { name: []const u8, impl: type, given: type, expect: type },
     };
 
-    fn isStruct(comptime T: type, diagnostic: *Error) Error.Type!void {
+    fn isStruct(comptime T: type, comptime diagnostic: *Error) Error.Type!void {
         if (@typeInfo(T) != .@"struct") {
             diagnostic.* = .{
                 .NotAStruct = .{
@@ -23,11 +24,7 @@ const Validator = struct {
         }
     }
 
-    fn fieldExists(
-        comptime field: std.builtin.Type.StructField,
-        comptime Impl: type,
-        diagnostic: *Error,
-    ) Error.Type!void {
+    fn fieldExists(comptime field: StructField, comptime Impl: type, comptime diagnostic: *Error) Error.Type!void {
         if (!@hasDecl(Impl, field.name)) {
             diagnostic.* = .{
                 .FieldNotFound = .{
@@ -39,11 +36,7 @@ const Validator = struct {
         }
     }
 
-    fn fieldHasType(
-        comptime field: std.builtin.Type.StructField,
-        comptime Impl: type,
-        diagnostic: *Error,
-    ) Error.Type!void {
+    fn fieldHasType(comptime field: StructField, comptime Impl: type, comptime diagnostic: *Error) Error.Type!void {
         const actual_type = @TypeOf(@field(Impl, field.name));
         if (actual_type != field.type) {
             diagnostic.* = .{
@@ -58,11 +51,7 @@ const Validator = struct {
         }
     }
 
-    fn checkType(
-        comptime Signature: type,
-        comptime Impl: type,
-        diagnostic: *Error,
-    ) Error.Type!void {
+    fn checkType(comptime Signature: type, comptime Impl: type, comptime diagnostic: *Error) Error.Type!void {
         try isStruct(Signature, diagnostic);
         try isStruct(Impl, diagnostic);
 
