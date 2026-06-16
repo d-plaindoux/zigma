@@ -1,19 +1,18 @@
 ///
 ///
 ///
-///
 const std = @import("std");
 
 const Validator = struct {
-    const ValidationErrorType = error{ZigmaError};
+    const Error = union(enum) {
+        const Type = error{ZigmaError};
 
-    const ValidationError = union(enum) {
         NotAStruct: struct { given: type },
         FieldNotFound: struct { name: []const u8, given: type },
         FieldTypeNotConform: struct { name: []const u8, impl: type, given: type, expect: type },
     };
 
-    fn isStruct(comptime T: type, diagnostic: *ValidationError) ValidationErrorType!void {
+    fn isStruct(comptime T: type, diagnostic: *Error) Error.Type!void {
         if (@typeInfo(T) != .@"struct") {
             diagnostic.* = .{
                 .NotAStruct = .{
@@ -27,8 +26,8 @@ const Validator = struct {
     fn fieldExists(
         comptime field: std.builtin.Type.StructField,
         comptime Impl: type,
-        diagnostic: *ValidationError,
-    ) ValidationErrorType!void {
+        diagnostic: *Error,
+    ) Error.Type!void {
         if (!@hasDecl(Impl, field.name)) {
             diagnostic.* = .{
                 .FieldNotFound = .{
@@ -43,8 +42,8 @@ const Validator = struct {
     fn fieldHasType(
         comptime field: std.builtin.Type.StructField,
         comptime Impl: type,
-        diagnostic: *ValidationError,
-    ) ValidationErrorType!void {
+        diagnostic: *Error,
+    ) Error.Type!void {
         const actual_type = @TypeOf(@field(Impl, field.name));
         if (actual_type != field.type) {
             diagnostic.* = .{
@@ -62,14 +61,12 @@ const Validator = struct {
     fn checkType(
         comptime Signature: type,
         comptime Impl: type,
-        diagnostic: *ValidationError,
-    ) ValidationErrorType!void {
+        diagnostic: *Error,
+    ) Error.Type!void {
         try isStruct(Signature, diagnostic);
         try isStruct(Impl, diagnostic);
 
-        const Struct = @typeInfo(Signature).@"struct";
-
-        inline for (Struct.fields) |field| {
+        inline for (@typeInfo(Signature).@"struct".fields) |field| {
             try fieldExists(field, Impl, diagnostic);
             try fieldHasType(field, Impl, diagnostic);
         }
@@ -83,7 +80,7 @@ const Validator = struct {
 pub fn implement(comptime Spec: type) type {
     return struct {
         pub fn with(comptime Impl: type) Spec {
-            var diagnostic: Validator.ValidationError = undefined;
+            var diagnostic: Validator.Error = undefined;
 
             Validator.checkType(Spec, Impl, &diagnostic) catch switch (diagnostic) {
                 .NotAStruct => |e| @compileError("Signature error: the type is a '" ++ @typeName(e.given) ++ "' and not a struct { ... } "),
