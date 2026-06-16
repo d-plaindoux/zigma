@@ -1,1 +1,2 @@
-pub const core = @import("core/main.zig");
+pub const implement = @import("structure/implement.zig").implement;
+pub const merge = @import("structure/merge.zig").merge;

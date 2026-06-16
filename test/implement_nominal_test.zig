@@ -21,7 +21,7 @@ const Float = struct {
 
 test "should Modularize Int and call add" {
     // Given
-    const IntNumber = zigma.core.implement(Number(u32)).with(Int);
+    const IntNumber = zigma.implement(Number(u32)).with(Int);
 
     // When
     const value = IntNumber.add(1, 2);
@@ -32,7 +32,7 @@ test "should Modularize Int and call add" {
 
 test "should Modularize Float and call add" {
     // Given
-    const IntNumber = zigma.core.implement(Number(f64)).with(Float);
+    const IntNumber = zigma.implement(Number(f64)).with(Float);
 
     // When
     const value = IntNumber.add(1.5, 2.5);

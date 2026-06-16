@@ -7,5 +7,5 @@ fn Number(A: type) type {
 
 test "Type not a struct" {
     // Given
-    _ = zigma.core.implement(Number(u32)).with(u32);
+    _ = zigma.implement(Number(u32)).with(u32);
 }

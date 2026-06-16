@@ -18,14 +18,13 @@ pub fn build(b: *std.Build) void {
     {
         const tests = b.addTest(.{
             .root_module = b.createModule(.{
-                .root_source_file = b.path("test/zigma_nominal_test.zig"),
+                .root_source_file = b.path("test/main.zig"),
                 .target = b.graph.host,
             }),
         });
 
         tests.root_module.addImport("zigma", zigma);
-        const run = b.addRunArtifact(tests);
-        test_step.dependOn(&run.step);
+        test_step.dependOn(&b.addRunArtifact(tests).step);
     }
 
     // Compilation failures
