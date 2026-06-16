@@ -20,10 +20,10 @@ const Impl = struct {
 
 test "should Merge Int and Float" {
     // Given
-    const Module = zigma.implement(zigma.merge(Int).with(Float),).with(Impl);
+    const IntFloat = zigma.implement(zigma.merge(Int).with(Float),).with(Impl);
 
     // When
-    const value = Module.addFloat(1, 2);
+    const value = IntFloat.addFloat(1, 2);
 
     // Then
     try std.testing.expectEqual(3, value);
