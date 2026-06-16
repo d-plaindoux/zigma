@@ -1,15 +1,13 @@
 const std = @import("std");
+const Diagnostic = @import("diagnostic.zig").Diagnostic;
+
 const StructField = std.builtin.Type.StructField;
 
-pub const Error = union(enum) {
-    const Type = error{ZigmaError};
-
-    NotAStruct: struct { given: type },
-    FieldNotFound: struct { name: []const u8, given: type },
-    FieldTypeNotConform: struct { name: []const u8, impl: type, given: type, expect: type },
-};
-
-pub fn containsType(comptime Signature: type, comptime Impl: type, comptime diagnostic: *Error) Error.Type!void {
+pub inline fn containsType(
+    comptime Signature: type,
+    comptime Impl: type,
+    comptime diagnostic: *Diagnostic,
+) Diagnostic.Error!void {
     try isStruct(Signature, diagnostic);
     try isStruct(Impl, diagnostic);
 
@@ -19,7 +17,7 @@ pub fn containsType(comptime Signature: type, comptime Impl: type, comptime diag
     }
 }
 
-pub fn isStruct(comptime T: type, diagnostic: *Error) Error.Type!void {
+pub inline fn isStruct(comptime T: type, diagnostic: *Diagnostic) Diagnostic.Error!void {
     if (@typeInfo(T) != .@"struct") {
         diagnostic.* = .{
             .NotAStruct = .{
@@ -34,7 +32,11 @@ pub fn isStruct(comptime T: type, diagnostic: *Error) Error.Type!void {
 // Private corner
 //
 
-fn fieldExists(comptime field: StructField, comptime Impl: type, comptime diagnostic: *Error) Error.Type!void {
+inline fn fieldExists(
+    comptime field: StructField,
+    comptime Impl: type,
+    comptime diagnostic: *Diagnostic,
+) Diagnostic.Error!void {
     if (!@hasDecl(Impl, field.name)) {
         diagnostic.* = .{
             .FieldNotFound = .{
@@ -46,7 +48,11 @@ fn fieldExists(comptime field: StructField, comptime Impl: type, comptime diagno
     }
 }
 
-fn fieldHasType(comptime field: StructField, comptime Impl: type, comptime diagnostic: *Error) Error.Type!void {
+inline fn fieldHasType(
+    comptime field: StructField,
+    comptime Impl: type,
+    comptime diagnostic: *Diagnostic,
+) Diagnostic.Error!void {
     const actual_type = @TypeOf(@field(Impl, field.name));
     if (actual_type != field.type) {
         diagnostic.* = .{

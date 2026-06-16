@@ -9,8 +9,6 @@ const Float = struct {
     addFloat: fn (a: f64, b: f64) f64,
 };
 
-const IntFloat = zigma.merge(Int).with(Float);
-
 const Impl = struct {
     pub fn addInt(a: u32, b: u32) u32 {
         return a + b;
@@ -22,7 +20,7 @@ const Impl = struct {
 
 test "should Merge Int and Float" {
     // Given
-    const Module = zigma.implement(IntFloat).with(Impl);
+    const Module = zigma.implement(zigma.merge(Int).with(Float),).with(Impl);
 
     // When
     const value = Module.addFloat(1, 2);
