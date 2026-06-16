@@ -133,12 +133,10 @@ Decouple your architecture from your validation logic. Write your invariant test
 
 ## Core Architecture
 
-Zigma operates on a highly clean 4-tier abstraction structure, all resolved during compilation:
+Zigma operates on a highly clean 2-tier abstraction structure, all resolved during compilation:
 
-* **The Engine (`implementedBy`, `incarnationFrom`):** Handles static introspection and structural mapping.
-* **The DSL (`impl`):** Exposes an ergonomic `impl(Spec).using(Impl)` syntax.
-* **The Specification (`Stack`, `Queue`):** Explicitly defines layout, types, and mathematical invariants.
-* **The Incarnation (`StackList`):** Concrete, optimized, pure systems code.
+* **The Engine (`Validator`):** Handles static introspection and structural mapping.
+* **The DSL (`implement`):** Exposes an ergonomic `implement(Spec).with(Impl)` syntax.
 
 ---
 
