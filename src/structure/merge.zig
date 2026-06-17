@@ -4,7 +4,6 @@ const Diagnostic = @import("diagnostic.zig").Diagnostic;
 
 const StructField = std.builtin.Type.StructField;
 
-/// Fonction exécutée à la compilation qui retourne un nouveau type
 pub fn merge(comptime T1: type) type {
     return struct {
         pub fn with(comptime T2: type) type {

@@ -3,7 +3,7 @@ const Diagnostic = @import("diagnostic.zig").Diagnostic;
 
 const StructField = std.builtin.Type.StructField;
 
-pub inline fn containsType(
+pub inline fn containsSpecs(
     comptime Signature: type,
     comptime Impl: type,
     comptime diagnostic: *Diagnostic,

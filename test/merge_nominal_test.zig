@@ -18,9 +18,9 @@ const Impl = struct {
     }
 };
 
-test "should Merge Int and Float" {
+test "should Merge Int and Float types" {
     // Given
-    const IntFloat = zigma.implement(zigma.merge(Int).with(Float),).with(Impl);
+    const IntFloat = zigma.implement(zigma.merge(Int).with(Float),).using(Impl);
 
     // When
     const value = IntFloat.addFloat(1, 2);

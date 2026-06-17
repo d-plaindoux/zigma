@@ -19,9 +19,9 @@ const Float = struct {
     }
 };
 
-test "should Modularize Int and call add" {
+test "should modularize Int Number and call add" {
     // Given
-    const IntNumber = zigma.implement(Number(u32)).with(Int);
+    const IntNumber = zigma.implement(Number(u32)).using(Int);
 
     // When
     const value = IntNumber.add(1, 2);
@@ -30,9 +30,9 @@ test "should Modularize Int and call add" {
     try std.testing.expectEqual(3, value);
 }
 
-test "should Modularize Float and call add" {
+test "should modularize Float Number and call add" {
     // Given
-    const IntNumber = zigma.implement(Number(f64)).with(Float);
+    const IntNumber = zigma.implement(Number(f64)).using(Float);
 
     // When
     const value = IntNumber.add(1.5, 2.5);
