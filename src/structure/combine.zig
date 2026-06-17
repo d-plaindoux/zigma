@@ -4,7 +4,7 @@ const Diagnostic = @import("diagnostic.zig").Diagnostic;
 
 const StructField = std.builtin.Type.StructField;
 
-pub fn merge(comptime T1: type) type {
+pub fn combine(comptime T1: type) type {
     return struct {
         pub fn with(comptime T2: type) type {
             var diagnostic: Diagnostic = undefined;
