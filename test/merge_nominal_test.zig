@@ -1,5 +1,5 @@
 const std = @import("std");
-const zigma = @import("zigma");
+const zigma = @import("zigma").module;
 
 const Int = struct {
     addInt: fn (a: u32, b: u32) u32,

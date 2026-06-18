@@ -1,5 +1,5 @@
 const std = @import("std");
-const zigma = @import("zigma");
+const zigma = @import("zigma").module;
 
 fn Number(A: type) type {
     return struct {

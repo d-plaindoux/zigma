@@ -14,7 +14,7 @@ In systems programming, interfaces are often implicit (duck typing) or polymorph
 
 ## The Zigma Solution
 Zigma allows you to treat algebraic specifications as first-class citizens. By combining compile-time introspection with an ergonomic, Rust-inspired DSL, Zigma:
-1. **Validates Signatures Magnetically:** Ensures your structures strictly adhere to the required contract before running any code.
+1. **Validates Signatures:** Ensures your structures strictly adhere to the required contract before running any code.
 2. **Embeds Semantic Invariants:** Bundles mathematical assertions (e.g., Stack LIFO behavior) directly within the specification.
 3. **Guarantees Maximum Performance:** Uses compile-time evaluation and forced inlining to completely erase the abstraction barrier in the final machine code.
 
