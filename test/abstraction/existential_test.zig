@@ -9,16 +9,16 @@ fn Opt(X: type) type {
     return ?X;
 }
 
-fn IsNotNull(X: type) fn (Opt(X)) bool {
+fn IsNotNull() type {
     return struct {
-        pub fn run(value: Opt(X)) bool {
+        pub fn run(X: type, value: Opt(X)) bool {
             return value != null;
         }
-    }.run;
+    };
 }
 
 test "should perform pack/unpack with optional values" {
     const Exists_i32 = Exists(Opt).pack(i32, null);
 
-    try std.testing.expectEqual(false, Exists_i32.unpack(bool)(IsNotNull(i32)));
+    try std.testing.expectEqual(false, Exists_i32.unpack(bool)(IsNotNull().run));
 }
