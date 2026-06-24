@@ -20,5 +20,5 @@ fn IsNotNull() type {
 test "should perform pack/unpack with optional values" {
     const Exists_i32 = Exists(Opt).pack(i32, null);
 
-    try std.testing.expectEqual(false, Exists_i32.unpack(bool)(IsNotNull().run));
+    try std.testing.expectEqual(false, Exists_i32.unpack(bool, IsNotNull().run));
 }
