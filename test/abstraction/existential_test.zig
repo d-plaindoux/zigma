@@ -11,7 +11,7 @@ fn Opt(X: type) type {
 
 fn IsNotNull() type {
     return struct {
-        pub fn run(X: type, value: Opt(X)) bool {
+        pub fn run(comptime X: type, value: Opt(X)) bool {
             return value != null;
         }
     };
