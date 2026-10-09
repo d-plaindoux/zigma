@@ -13,13 +13,13 @@ fn FunType(comptime T: type, comptime acceptPointer: bool) ?std.builtin.Type.Fn 
 
 fn Curry(comptime f: anytype) type {
     const T = FunType(@TypeOf(f), true) orelse @compileError(notAFunction);
-    const arity = T.params.len;
+    const arity = T.param_attrs.len;
 
     return switch (arity) {
-        1 => fn (T.params[0].type.?) T.return_type.?,
-        2 => fn (T.params[0].type.?) fn (T.params[1].type.?) T.return_type.?,
-        3 => fn (T.params[0].type.?) fn (T.params[1].type.?) fn (T.params[2].type.?) T.return_type.?,
-        4 => fn (T.params[0].type.?) fn (T.params[1].type.?) fn (T.params[2].type.?) fn (T.params[3].type.?) T.return_type.?,
+        1 => fn (T.param_types[0].?) T.return_type.?,
+        2 => fn (T.param_types[0].?) fn (T.param_types[1].?) T.return_type.?,
+        3 => fn (T.param_types[0].?) fn (T.param_types[1].?) fn (T.param_types[2].?) T.return_type.?,
+        4 => fn (T.param_types[0].?) fn (T.param_types[1].?) fn (T.param_types[2].?) fn (T.param_types[3].?) T.return_type.?,
         else => @compileError(expectParameters),
     };
 }
@@ -27,13 +27,13 @@ fn Curry(comptime f: anytype) type {
 // f : (A,B,...) -> R
 pub fn curry(comptime f: anytype) Curry(f) {
     const T = FunType(@TypeOf(f), true) orelse @compileError(notAFunction);
-    const arity = T.params.len;
+    const arity = T.param_attrs.len;
 
     return switch (arity) {
         1 => f,
         2 => struct {
-            const A = T.params[0].type.?;
-            const B = T.params[1].type.?;
+            const A = T.param_types[0].?;
+            const B = T.param_types[1].?;
             const R = T.return_type.?;
 
             fn fun(a: A) fn (B) R {
@@ -45,9 +45,9 @@ pub fn curry(comptime f: anytype) Curry(f) {
             }
         }.fun,
         3 => struct {
-            const A = T.params[0].type.?;
-            const B = T.params[1].type.?;
-            const C = T.params[2].type.?;
+            const A = T.param_types[0].?;
+            const B = T.param_types[1].?;
+            const C = T.param_types[2].?;
             const R = T.return_type.?;
 
             fn fun(a: A) fn (B) fn (C) R {
@@ -59,10 +59,10 @@ pub fn curry(comptime f: anytype) Curry(f) {
             }
         }.fun,
         4 => struct {
-            const A = T.params[0].type.?;
-            const B = T.params[1].type.?;
-            const C = T.params[2].type.?;
-            const D = T.params[3].type.?;
+            const A = T.param_types[0].?;
+            const B = T.param_types[1].?;
+            const C = T.param_types[2].?;
+            const D = T.param_types[3].?;
             const R = T.return_type.?;
 
             fn fun(a: A) fn (B) fn (C) fn (D) R {

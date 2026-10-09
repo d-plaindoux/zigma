@@ -2,8 +2,6 @@ const std = @import("std");
 const Validator = @import("validator.zig");
 const Diagnostic = @import("diagnostic.zig").Diagnostic;
 
-const StructField = std.builtin.Type.StructField;
-
 pub fn combine(comptime T1: type) type {
     return struct {
         pub fn with(comptime T2: type) type {
@@ -14,29 +12,29 @@ pub fn combine(comptime T1: type) type {
             const info1 = @typeInfo(T1);
             const info2 = @typeInfo(T2);
 
-            const total_len = info1.@"struct".fields.len + info2.@"struct".fields.len;
+            const total_len = info1.@"struct".field_names.len + info2.@"struct".field_names.len;
 
             const data = comptime @"return": {
                 var names: [total_len][]const u8 = undefined;
                 var types: [total_len]type = undefined;
-                var attributes: [total_len]StructField.Attributes = undefined;
+                var attributes: [total_len]std.lang.Type.Struct.FieldAttributes = undefined;
 
-                for (info1.@"struct".fields, 0..) |field, i| {
-                    names[i] = field.name;
-                    types[i] = field.type;
+                for (0..info1.@"struct".field_names.len) |i| {
+                    names[i] = info1.@"struct".field_names[i];
+                    types[i] = info1.@"struct".field_types[i];
                     attributes[i] = .{
-                        .@"align" = field.alignment,
-                        .default_value_ptr = field.default_value_ptr,
+                        .@"align" = info1.@"struct".field_attrs[i].@"align",
+                        .default_value_ptr = info1.@"struct".field_attrs[i].default_value_ptr,
                     };
                 }
 
-                for (info2.@"struct".fields, 0..) |field, i| {
-                    const idx = info1.@"struct".fields.len + i;
-                    names[idx] = field.name;
-                    types[idx] = field.type;
+                for (0..info2.@"struct".field_names.len) |i| {
+                    const idx = info1.@"struct".field_names.len + i;
+                    names[idx] = info2.@"struct".field_names[i];
+                    types[idx] = info2.@"struct".field_types[i];
                     attributes[idx] = .{
-                        .@"align" = field.alignment,
-                        .default_value_ptr = field.default_value_ptr,
+                        .@"align" = info2.@"struct".field_attrs[i].@"align",
+                        .default_value_ptr = info2.@"struct".field_attrs[i].default_value_ptr,
                     };
                 }
 

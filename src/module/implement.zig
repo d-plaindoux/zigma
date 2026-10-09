@@ -4,19 +4,19 @@ const Diagnostic = @import("diagnostic.zig").Diagnostic;
 pub fn implement(comptime Spec: type) type {
     return struct {
         pub fn using(comptime Impl: type) Spec {
-            var diagnostic: Diagnostic = undefined;
+            return comptime blk: {
+                var diagnostic: Diagnostic = undefined;
 
-            Validator.containsSpecs(Spec, Impl, &diagnostic) catch diagnostic.report();
-
-            comptime {
+                Validator.containsSpecs(Spec, Impl, &diagnostic) catch diagnostic.report();
                 var result: Spec = undefined;
 
-                for (@typeInfo(Spec).@"struct".fields) |field| {
-                    @field(result, field.name) = @field(Impl, field.name);
+                for (0..@typeInfo(Spec).@"struct".field_names.len) |i| {
+                    @field(result, @typeInfo(Spec).@"struct".field_names[i]) =
+                        @field(Impl, @typeInfo(Spec).@"struct".field_names[i]);
                 }
 
-                return result;
-            }
+                break :blk result;
+            };
         }
     };
 }
