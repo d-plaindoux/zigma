@@ -13,10 +13,14 @@ fn Cont(comptime T: fn (type) type, comptime Y: type) type {
 // ∃x. T(x) = ∀y. (∀x. T(x) -> y) -> y
 pub fn Exists(comptime T: fn (type) type) type {
     return struct {
-        pub fn pack(comptime X: type, comptime value: T(X)) type {
+        pub fn pack(comptime X: type, value: T(X)) type {
             return struct {
-                pub fn unpack(comptime Y: type, comptime cont: Cont(T, Y)) Y {
-                    return cont(X, value);
+                pub fn open(comptime Y: type) fn (Cont(T, Y)) Y {
+                    return struct {
+                        fn run(cont: Cont(T, Y)) Y {
+                            return cont(X, value);
+                        }
+                    }.run;
                 }
             };
         }

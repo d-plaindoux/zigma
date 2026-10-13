@@ -20,7 +20,7 @@ const Impl = struct {
 
 test "should combine; Int and Float types and call addInt" {
     // Given
-    const IntFloat = zigma.implement(zigma.combine(Int).with(Float)).using(Impl);
+    const IntFloat = zigma.implement(zigma.combine(Int, Float)).using(Impl);
 
     // When
     const value = IntFloat.addInt(1, 2);
@@ -31,7 +31,7 @@ test "should combine; Int and Float types and call addInt" {
 
 test "should combine Int and Float types and call addFloat" {
     // Given
-    const IntFloat = zigma.implement(zigma.combine(Int).with(Float)).using(Impl);
+    const IntFloat = zigma.implement(zigma.combine(Int, Float)).using(Impl);
 
     // When
     const value = IntFloat.addFloat(1, 2);
